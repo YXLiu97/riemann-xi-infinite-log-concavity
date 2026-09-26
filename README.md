@@ -61,7 +61,7 @@ A full run:
 
 - certifies all 256 Gauss--Legendre node brackets and their positive weights;
 - computes enclosing raw Gaussian moment intervals;
-- encloses the coefficients \(\lambda_0,\ldots,\lambda_{12016}\);
+- encloses the coefficients $\lambda_0,\ldots,\lambda_{12016}$;
 - verifies positivity through 14 nonlinear iterations; and
 - checks all 12,000 final ratio inequalities required by the finite certificate.
 
@@ -88,7 +88,7 @@ Their contents are as follows:
 | `finite_certificate_current_review_nodes.json` | Certified brackets for all 256 Gauss--Legendre nodes, endpoint signs, derivative intervals, and weight intervals |
 | `finite_certificate_current_review_raw_moments.json` | Enclosing raw Gaussian moment sums |
 | `finite_certificate_current_review_errors.json` | Certified quadrature-error bounds, tail bounds, and phase-root brackets |
-| `finite_certificate_current_review_lambda.json` | Positive interval enclosures for \(\lambda_0,\ldots,\lambda_{12016}\) |
+| `finite_certificate_current_review_lambda.json` | Positive interval enclosures for $\lambda_0,\ldots,\lambda_{12016}$ |
 | `finite_certificate_current_review_ratios.json` | Certified final ratio intervals |
 | `finite_certificate_current_review_report.json` | Parameters, software information, retained index ranges, and the final pass summary |
 
