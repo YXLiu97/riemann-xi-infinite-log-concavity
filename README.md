@@ -2,61 +2,163 @@
 
 This supplement contains the source code, exact computational artifacts, and reproducibility information for the computer-assisted parts of the manuscript. These materials are provided to support verification and reproduction of the certified computations used in the paper.
 
-## Reproduce the full certificate
+## Contents
 
-Use Python 3.12 with `mpmath==1.3.0` and `gmpy2==2.3.1`. The recorded run used Python 3.12.14 and the gmpy integer backend. Install these packages in a suitable environment and run from this supplement directory:
+The directory is organized as follows:
+
+```text
+supplement/
+├── README.md
+├── analytic-constants.json
+├── scripts/
+│   ├── check_analytic_constants.py
+│   └── xi_finite_certificate.py
+├── mcp/
+│   ├── __init__.py
+│   └── server.py
+└── downloads/
+    └── riemann_xi_infinite_log_concavity/
+        ├── finite_certificate_current_review_nodes.json
+        ├── finite_certificate_current_review_raw_moments.json
+        ├── finite_certificate_current_review_errors.json
+        ├── finite_certificate_current_review_lambda.json
+        ├── finite_certificate_current_review_ratios.json
+        └── finite_certificate_current_review_report.json
+```
+
+The script `xi_finite_certificate.py` produces the rigorous finite certificate used in the proof of the finite escape result. The script `check_analytic_constants.py` independently checks the explicit scalar inequalities appearing in the analytic estimates.
+
+The local `mcp` module only implements progress logging calls used by the certificate script. It is not a mathematical input to the proof.
+
+## Software requirements
+
+The computations were carried out with Python 3.12 and the following packages:
+
+```text
+mpmath==1.3.0
+gmpy2==2.3.1
+```
+
+The recorded run used Python 3.12.14.
+
+The interval computations rely on `mpmath` interval arithmetic together with explicitly directed basic operations where indicated in the source code.
+
+## Reproduce the finite certificate
+
+Run the following command from the `supplement` directory:
 
 ```text
 python scripts/xi_finite_certificate.py --nmax 12016 --q 256 --dps 130 --workers 8 --steps 14 --certify-to 12000 --tag reproduced
 ```
 
-The stored evidence uses the tag `current_review`. The `reproduced` tag in the command above writes new files without replacing it. The tag affects file naming, not the mathematical calculation. Keep Python assertions enabled: do not use `-O`, `-OO`, or `PYTHONOPTIMIZE`. Do not add `--reuse-nodes` for a full reproduction; that option trusts saved node data instead of rechecking the endpoint signs. The local `mcp` module only implements the original program's progress logging calls.
+Python assertions must be enabled. In particular, do not use `-O`, `-OO`, or `PYTHONOPTIMIZE`.
 
-The unchanged program's SHA-256 is
+For a full reproduction, do not add the optional `--reuse-nodes` flag. Without this flag, the program regenerates the Gauss--Legendre node brackets and certifies the endpoint signs before carrying out the remaining interval computations.
+
+The tag `reproduced` affects only the names of the newly generated output files. It does not change the mathematical calculation. The archived certificate supplied with the repository uses the tag `current_review`.
+
+A full run:
+
+- certifies all 256 Gauss--Legendre node brackets and their positive weights;
+- computes enclosing raw Gaussian moment intervals;
+- encloses the coefficients \(\lambda_0,\ldots,\lambda_{12016}\);
+- verifies positivity through 14 nonlinear iterations; and
+- checks all 12,000 final ratio inequalities required by the finite certificate.
+
+Worker scheduling may change the exact endpoints of some enclosing sums slightly because the order of interval additions may differ. Bit-for-bit identity with the archived parallel run is therefore not required. The relevant conditions are interval inclusion, positivity of all certified entries, and the strict final ratio bound.
+
+## Archived finite certificate
+
+The six archived certificate files are stored in
 
 ```text
-01816166fa0b317f0b116ca3ac45ffa198ec9348aa3c73d48f4d8a571e0211fe
+downloads/riemann_xi_infinite_log_concavity/
 ```
 
-The full run freshly generated nodes and 40 quadrature segments, enclosed all 12017 initial coefficients, and checked 14 nonlinear iterations. It passed in 121.112 seconds in the review environment. Worker scheduling can change the exact endpoints of enclosing sums slightly; bit-for-bit identity with a previous parallel run is not required for a valid enclosure. The inclusion assertions and the strict final lower bound are the relevant checks.
+and have the prefix
 
-## Exact certificate files
+```text
+finite_certificate_current_review_
+```
 
-All six files are under `downloads/riemann_xi_infinite_log_concavity/` with prefix `finite_certificate_current_review_`:
+Their contents are as follows:
 
-| Suffix | Content |
+| File | Content |
 |---|---|
-| `nodes.json` | All 256 disjoint root brackets, certified opposite endpoint signs, derivative and weight intervals |
-| `raw_moments.json` | 12017 enclosing raw Gaussian sums |
-| `errors.json` | Cauchy error bounds, real-tail bounds, certified phase-root brackets, constant audit |
-| `lambda.json` | 12017 positive starting coefficient enclosures |
-| `ratios.json` | 12000 final ratio intervals |
-| `report.json` | Parameters, software assumptions, source hash, every retained index range, and pass results |
+| `finite_certificate_current_review_nodes.json` | Certified brackets for all 256 Gauss--Legendre nodes, endpoint signs, derivative intervals, and weight intervals |
+| `finite_certificate_current_review_raw_moments.json` | Enclosing raw Gaussian moment sums |
+| `finite_certificate_current_review_errors.json` | Certified quadrature-error bounds, tail bounds, and phase-root brackets |
+| `finite_certificate_current_review_lambda.json` | Positive interval enclosures for \(\lambda_0,\ldots,\lambda_{12016}\) |
+| `finite_certificate_current_review_ratios.json` | Certified final ratio intervals |
+| `finite_certificate_current_review_report.json` | Parameters, software information, retained index ranges, and the final pass summary |
 
-An endpoint `[sign, mantissa, exponent, bitcount]` represents the exact dyadic rational `(-1)^sign * mantissa * 2^exponent`. Parse mantissas as arbitrary-precision integers. Displayed decimal endpoints are rounded outward; they are not standard deviations or errors estimated from repeated floating-point runs.
+An interval endpoint stored as
 
-The final report must contain `status=passed`, `certified_rational_lower_bound="10"`, positive entries through index 12002 at iteration 14, and 12000 checked ratios. The smallest computed final lower endpoint occurs at index 12000. Its outward decimal interval is `[10.9042985947999313085054, 10.9042985947999313085055]`.
+```text
+[sign, mantissa, exponent, bitcount]
+```
 
-## Analytic scalar checks
+represents the exact dyadic rational
+
+```text
+(-1)^sign * mantissa * 2^exponent.
+```
+
+The mantissas in the JSON files are arbitrary-precision integers. Thus the stored endpoints are the actual binary interval endpoints used by the calculation, rather than decimal approximations reconstructed from printed output.
+
+Displayed decimal endpoints are rounded outward.
+
+For the archived certificate, the final ratio test verifies
+
+```text
+r_{14,n} > 10
+```
+
+for every
+
+```text
+1 <= n <= 12000.
+```
+
+The smallest computed lower endpoint at iteration 14 occurs at `n = 12000`. Its outward decimal enclosure is
+
+```text
+[10.9042985947999313085054,
+ 10.9042985947999313085055].
+```
+
+The assertion `> 10` is made using the underlying exact binary interval endpoints, not the displayed decimal digits.
+
+## Reproduce the analytic scalar checks
+
+The explicit scalar inequalities used in the analytic estimates can be checked separately by running
 
 ```text
 python scripts/check_analytic_constants.py --output analytic-constants-reproduced.json
 ```
 
-This uses 100-digit mpmath interval arithmetic. The stored `analytic-constants.json` contains 34 passing checks, their exact formulas, dyadic endpoints, and positive margins. In particular, the shrinking-disk constant is less than 1500 and the gamma remainder's reduced bound is less than 4. These checks do not establish the analytic reductions to the listed scalar endpoints, nor do they verify contours, holomorphic branches, or induction hypotheses.
+from the `supplement` directory.
 
-## Evidence and provenance scope
+The archived output is
 
-| Record | Meaning |
-|---|---|
-| `review-runtime.json` | Fresh full-run Python and package versions and original source hash |
-| `computation-record.json` | Current full-run execution and verification scope, with artifact hashes |
-| `triangle-replay.json` | Earlier separate 512-bit integer-dyadic replay of the archived initial intervals; conditional on those enclosures |
-| `bundle-audit.json` | Earlier manifest and source consistency checks of the unchanged original bundle; its paths refer to that original bundle |
-| `retrieval.json` | Public references consulted, their URLs and hashes; retrieval paths identify the review workspace cache |
-| `historical-provenance/` | Supplied blueprints and historical automated verification report, with their original claims preserved as historical claims |
+```text
+analytic-constants.json
+```
 
-The fresh full run goes beyond the earlier conditional triangle replay by regenerating the moment enclosures. It uses the supplied implementation, not an independently written moment integrator. The integer replay uses separate recurrence arithmetic but accepts archived starting enclosures. Neither is an independent review of the whole paper.
+and contains 34 scalar checks performed with 100-digit `mpmath` interval arithmetic.
 
-The arithmetic trust boundary is mpmath 1.3.0's supported interval functions and explicit directed basic operations, with the gmpy2 2.3.1 integer backend. mpmath documents its interval support as experimental. This supplement does not certify the numerical library itself. The main theorem also depends on the mathematical arguments in Sections 2--4 and 6, which do not run inside the finite certificate script.
+These include, among others, the numerical bounds used in the saddle-point estimates, the Gaussian error estimates, the shrinking-disk argument, and the finite-kernel estimates.
 
+The scalar-check script verifies only the stated numerical inequalities. It does not verify the analytic reductions leading to those inequalities, the contour deformations, holomorphic continuation, monotonicity arguments, or the induction arguments in the manuscript. Those parts are proved mathematically in the paper.
+
+## Relation to the proof
+
+The finite certificate produced by `xi_finite_certificate.py` is used for the bounded range of indices in the finite escape argument. The analytic estimates in the manuscript treat the complementary unbounded range.
+
+The computational scripts therefore certify only the finite numerical statements explicitly identified in the paper. The deduction of infinite log-concavity from these finite and analytic inputs is a separate mathematical argument given in the manuscript.
+
+## Arithmetic trust boundary
+
+The certified computations rely on the correctness of the supported interval operations in `mpmath` 1.3.0 and on the explicitly directed elementary operations used by the certificate program. The computations may use the `gmpy2` 2.3.1 integer backend when available.
+
+The supplement does not constitute a formal verification of the numerical library itself.
