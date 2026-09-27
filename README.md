@@ -17,16 +17,16 @@ supplement/
 │   ├── __init__.py
 │   └── server.py
 └── downloads/
-    └── riemann_xi_infinite_log_concavity/
-        ├── finite_certificate_current_review_nodes.json
-        ├── finite_certificate_current_review_raw_moments.json
-        ├── finite_certificate_current_review_errors.json
-        ├── finite_certificate_current_review_lambda.json
-        ├── finite_certificate_current_review_ratios.json
-        └── finite_certificate_current_review_report.json
+└── riemann_xi_infinite_log_concavity/
+├── finite_certificate_current_review_nodes.json
+├── finite_certificate_current_review_raw_moments.json
+├── finite_certificate_current_review_errors.json
+├── finite_certificate_current_review_lambda.json
+├── finite_certificate_current_review_ratios.json
+└── finite_certificate_current_review_report.json
 ```
 
-The script `scripts/xi_finite_certificate.py` performs the finite interval verification used in the manuscript. It certifies the Gauss--Legendre nodes and weights, evaluates the sums \(Q_n\), constructs interval enclosures for \(\lambda_0,\ldots,\lambda_{12016}\), verifies positivity through 14 iterations, and checks the final ratio inequalities.
+The script `scripts/xi_finite_certificate.py` performs the finite interval verification used in the manuscript. It certifies the Gauss--Legendre nodes and weights, evaluates the sums $Q_n$, constructs interval enclosures for $\lambda_0,\ldots,\lambda_{12016}$, verifies positivity through 14 iterations, and checks the final ratio inequalities.
 
 The script `scripts/check_analytic_constants.py` separately verifies the explicit scalar inequalities appearing in the analytic estimates.
 
@@ -61,11 +61,11 @@ The value of `--tag` affects only the names of the generated output files. The a
 
 A complete run verifies:
 
-- 256 pairwise disjoint brackets containing the zeros of \(P_{256}\);
+- 256 pairwise disjoint brackets containing the zeros of $P_{256}$;
 - positive interval enclosures for the corresponding Gauss--Legendre weights;
-- outward interval enclosures of the sums \(Q_n\) for \(0\le n\le12016\);
-- the bounds \(E_n\) and \(T_n\) used in the coefficient enclosures;
-- positive intervals containing \(\lambda_0,\ldots,\lambda_{12016}\);
+- outward interval enclosures of the sums $Q_n$ for $0\le n\le12016$;
+- the bounds $E_n$ and $T_n$ used in the coefficient enclosures;
+- positive intervals containing $\lambda_0,\ldots,\lambda_{12016}$;
 - positivity of the iterated array through step 14; and
 - all 12,000 final ratio inequalities required in the manuscript.
 
@@ -89,10 +89,10 @@ Their contents are as follows:
 
 | File | Content |
 |---|---|
-| `finite_certificate_current_review_nodes.json` | Certified brackets for all 256 zeros of \(P_{256}\), endpoint signs, derivative intervals, and positive Gauss--Legendre weight intervals |
-| `finite_certificate_current_review_raw_moments.json` | Outward interval enclosures of the sums \(Q_n\), \(0\le n\le12016\) |
-| `finite_certificate_current_review_errors.json` | Certified intervals \([l_n,u_n]\) and outward bounds for \(E_n\) and \(T_n\) |
-| `finite_certificate_current_review_lambda.json` | Positive interval enclosures for \(\lambda_0,\ldots,\lambda_{12016}\) |
+| `finite_certificate_current_review_nodes.json` | Certified brackets for all 256 zeros of $P_{256}$, endpoint signs, derivative intervals, and positive Gauss--Legendre weight intervals |
+| `finite_certificate_current_review_raw_moments.json` | Outward interval enclosures of the sums $Q_n$, $0\le n\le12016$ |
+| `finite_certificate_current_review_errors.json` | Certified intervals $[l_n,u_n]$ and outward bounds for $E_n$ and $T_n$ |
+| `finite_certificate_current_review_lambda.json` | Positive interval enclosures for $\lambda_0,\ldots,\lambda_{12016}$ |
 | `finite_certificate_current_review_ratios.json` | Certified ratio intervals at the final iteration |
 | `finite_certificate_current_review_report.json` | Parameters, software information, retained index ranges, iteration summaries, and verification results |
 
@@ -128,7 +128,7 @@ The smallest certified lower endpoint at iteration 14 occurs at `n = 12000`. Its
 
 ```text
 [10.9042985947999313085054,
- 10.9042985947999313085055].
+10.9042985947999313085055].
 ```
 
 The strict inequality `> 10` is checked using the underlying exact binary interval endpoints, not the displayed decimal digits.
@@ -185,6 +185,6 @@ Accordingly, the computational scripts establish only the finite numerical state
 
 The finite computation relies on the inclusion properties of the interval operations provided by `mpmath` 1.3.0 and on the explicitly directed elementary operations used in `xi_finite_certificate.py`. The recorded computation used `gmpy2` 2.3.1 as the integer backend.
 
-Approximate `mpmath.mp` calculations are used only to select candidate Gauss--Legendre root brackets and candidate intervals \([l_n,u_n]\). These intervals are subsequently certified by outward interval inequalities. Thus no unchecked approximate value is used as an endpoint of a certified enclosure.
+Approximate `mpmath.mp` calculations are used only to select candidate Gauss--Legendre root brackets and candidate intervals $[l_n,u_n]$. These intervals are subsequently certified by outward interval inequalities. Thus no unchecked approximate value is used as an endpoint of a certified enclosure.
 
 The `mpmath` documentation describes the inclusion properties of its interval arithmetic but also marks the interval module as experimental. Consequently, this supplement does not constitute a formal verification of the numerical library itself.
