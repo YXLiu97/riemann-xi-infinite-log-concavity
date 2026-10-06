@@ -91,7 +91,7 @@ Their contents are as follows:
 |---|---|
 | `finite_certificate_current_review_nodes.json` | Certified brackets for all 256 zeros of $P_{256}$, endpoint signs, derivative intervals, and positive Gauss--Legendre weight intervals |
 | `finite_certificate_current_review_raw_moments.json` | Outward interval enclosures of the sums $Q_n$, $0\le n\le12016$ |
-| `finite_certificate_current_review_errors.json` | Certified intervals $[l_n,u_n]$ and outward bounds for $E_n$ and $T_n$ |
+| `finite_certificate_current_review_errors.json` | Certified intervals $[l_n,u_n]$ and outward bounds for $M_n$ |
 | `finite_certificate_current_review_lambda.json` | Positive interval enclosures for $\lambda_0,\ldots,\lambda_{12016}$ |
 | `finite_certificate_current_review_ratios.json` | Certified ratio intervals at the final iteration |
 | `finite_certificate_current_review_report.json` | Parameters, software information, retained index ranges, iteration summaries, and verification results |
